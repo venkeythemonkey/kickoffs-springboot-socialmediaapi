@@ -37,7 +37,7 @@ public class UsersService {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(usersResponses);
 	}
-	
+
 	public Map<String, String> addFriend(int uid, int id){
 		Map<String, String> response = new LinkedHashMap<>();
 		Optional<Users> fromUser = usersRepo.findById(uid);
@@ -49,16 +49,23 @@ public class UsersService {
 		if (toUser.isEmpty()){
 			throw new IllegalArgumentException("Invalid to_UserID");
 		}
+		if (uid == id) {
+			throw new IllegalArgumentException("Invalid UserId");
+		}
 
 		Users from = fromUser.get();
 		Users to = toUser.get();
 
 		if(from.getFriends().contains(to)){
-			response.put("status", "You have already sent request");
+			response.put("status", "You are already friends with " + to.getUsername());
 			return response;
 		}
 
 		if(to.getRequest().contains(from)){
+			response.put("status", "You have already sent request");
+			return response;
+		}
+		if(from.getRequest().contains(to)){
 			response.put("status", "The User has already sent you a request");
 			return response;
 		}

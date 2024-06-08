@@ -56,8 +56,8 @@ public class Controller {
 			return ResponseEntity.ok(usersResponses);
 		}
 	}
-	
-	
+
+
 	@PostMapping("addFriend/{id}")
 	public ResponseEntity<Object> sendRequest(@PathVariable int id, @RequestBody Uid uid){
 		Map<String, String> response = new LinkedHashMap<>();
@@ -66,6 +66,7 @@ public class Controller {
 		}
 		catch (IllegalArgumentException e){
 			response.put("error", e.getMessage());
+			return ResponseEntity.status(400).body(response);
 		}
 		catch (Exception e){
 			response.put("error", "Internal Server Error");
