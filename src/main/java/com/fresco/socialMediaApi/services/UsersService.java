@@ -127,14 +127,58 @@ public class UsersService {
 	}
 
 
+	public ResponseEntity<Object> deleteFriend(int uid, int id) {
+		Map<String, String> response = new LinkedHashMap<>();
+		Optional<Users> toUser = usersRepo.findById(uid);
+		Optional<Users> fromUser = usersRepo.findById(id);
+
+		if(toUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid UserID");
+		}
+		if (fromUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid UserID");
+		}
+
+		Users to = toUser.get();
+		Users from = fromUser.get();
+
+		if(!to.getFriends().contains(from)){
+			response.put("error", "Friendlist does not contain this UserID");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+
+		to.deleteFriend(from);
+		from.deleteFriend(to);
+		usersRepo.save(to);
+		usersRepo.save(from);
+		response.put("status", "Friend Deleted - " + from.getUsername());
+		return ResponseEntity.ok(response);
+	}
 
 	public ResponseEntity<Object> deleteRequest(int uid, int id) {
-		return null;
-	}
-	
-	
-	public ResponseEntity<Object> deleteFriend(int uid, int id) {
-		return null;
+		Map<String, String> response = new LinkedHashMap<>();
+		Optional<Users> toUser = usersRepo.findById(uid);
+		Optional<Users> fromUser = usersRepo.findById(id);
+
+		if(toUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid to_UserID");
+		}
+		if (fromUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid from_UserID");
+		}
+
+		Users to = toUser.get();
+		Users from = fromUser.get();
+
+		if(!to.getRequest().contains(from)){
+			response.put("error", "Friend Requests does not contain this UserID");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+
+		to.deleteRequest(from);
+		usersRepo.save(to);
+		response.put("status", "Friend Request Deleted - " + from.getUsername());
+		return ResponseEntity.ok(response);
 	}
 
 

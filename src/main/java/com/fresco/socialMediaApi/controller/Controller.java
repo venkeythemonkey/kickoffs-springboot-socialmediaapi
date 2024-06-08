@@ -93,15 +93,29 @@ public class Controller {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
-	
-	@PutMapping("deleteRequest/{id}")
-	public ResponseEntity<Object> deleteRequest(@PathVariable int id, @RequestBody Uid uid){
-		return null;
-	}
-	
+
 	@PutMapping("deleteFriend/{id}")
 	public ResponseEntity<Object> deleteFriend(@PathVariable int id, @RequestBody Uid uid){
-		return null;
+		try {
+			return usersService.deleteFriend(uid.getUid(), id);
+		}
+		catch (IllegalArgumentException e){
+			Map<String, String> response = new LinkedHashMap<>();
+			response.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+	}
+
+	@PutMapping("deleteRequest/{id}")
+	public ResponseEntity<Object> deleteRequest(@PathVariable int id, @RequestBody Uid uid){
+		try {
+			return usersService.deleteRequest(uid.getUid(), id);
+		}
+		catch (IllegalArgumentException e){
+			Map<String, String> response = new LinkedHashMap<>();
+			response.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
 	}
 
 	@GetMapping("friendList/{id}")
