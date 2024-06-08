@@ -74,11 +74,11 @@ public class Controller {
 		}
 		return ResponseEntity.ok(response);
 	}
-	
-	
+
+
 	@GetMapping("friendRequest/{id}")
-	public ResponseEntity<Object> getAllRequest(int id){
-		return null;
+	public ResponseEntity<Object> getAllRequest(@PathVariable int id){
+		return usersService.getAllRequest(id);
 	}
 
 	

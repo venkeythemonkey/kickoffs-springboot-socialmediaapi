@@ -74,11 +74,18 @@ public class UsersService {
 		response.put("status" , "Request sent to " + to.getUsername());
 		return response;
 	}
-	
-	
-	
+
+
+
 	public ResponseEntity<Object> getAllRequest(int id){
-		return null;
+		Optional<Users> user = usersRepo.findById(id);
+		if(user.isEmpty()){
+			Map<String, String> response = new LinkedHashMap<>();
+			response.put("error", "Invalid UserID");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+		RequestsDto requestsDto = new RequestsDto(user.get());
+		return ResponseEntity.status(HttpStatus.OK).body(requestsDto);
 	}
 	
 	
