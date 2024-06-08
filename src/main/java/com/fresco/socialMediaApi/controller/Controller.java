@@ -103,9 +103,9 @@ public class Controller {
 	public ResponseEntity<Object> deleteFriend(@PathVariable int id, @RequestBody Uid uid){
 		return null;
 	}
-	
+
 	@GetMapping("friendList/{id}")
 	public ResponseEntity<Object> friendList(@PathVariable int id){
-		return null;
+		return usersService.getFriends(id);
 	}
 }
