@@ -81,10 +81,17 @@ public class Controller {
 		return usersService.getAllRequest(id);
 	}
 
-	
+
 	@PostMapping("acceptFriend/{id}")
-	public ResponseEntity<Object> acceptFriend(int id,Uid uid){
-		return null;
+	public ResponseEntity<Object> acceptFriend(@PathVariable int id, @RequestBody Uid uid){
+		try {
+			return usersService.acceptFriend(uid.getUid(), id);
+		}
+		catch (IllegalArgumentException e){
+			Map<String, String> response = new LinkedHashMap<>();
+			response.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
 	}
 	
 	@PutMapping("deleteRequest/{id}")

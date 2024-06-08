@@ -98,7 +98,32 @@ public class UsersService {
 
 
 	public ResponseEntity<Object> acceptFriend(int uid, int id) {
-		return null;
+		Map<String, String> response = new LinkedHashMap<>();
+		Optional<Users> toUser = usersRepo.findById(uid);
+		Optional<Users> fromUser = usersRepo.findById(id);
+
+		if(toUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid to_UserID");
+		}
+		if (fromUser.isEmpty()){
+			throw new IllegalArgumentException("Invalid from_UserID");
+		}
+
+		Users to = toUser.get();
+		Users from = fromUser.get();
+
+		if(!to.getRequest().contains(from)){
+			response.put("error", "Friend Requests does not contain this UserID");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
+
+		to.deleteRequest(from);
+		to.addFriends(from);
+		from.addFriends(to);
+		usersRepo.save(to);
+		usersRepo.save(from);
+		response.put("status", "Friend Request Accepted - " + from.getUsername());
+		return ResponseEntity.ok(response);
 	}
 
 
