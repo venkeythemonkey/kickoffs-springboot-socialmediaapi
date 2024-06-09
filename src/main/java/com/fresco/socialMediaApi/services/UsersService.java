@@ -29,13 +29,13 @@ public class UsersService {
 	
 	
 	
-	public ResponseEntity<Object> getAllUsers(){
+	public List<UsersResponse> getAllUsers(){
 		List<Users> users = usersRepo.findAll();
 		List<UsersResponse> usersResponses = new ArrayList<>();
 		for(Users user : users){
 			usersResponses.add(new UsersResponse(user));
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(usersResponses);
+		return usersResponses;
 	}
 
 	public Map<String, String> addFriend(int uid, int id){
@@ -89,9 +89,9 @@ public class UsersService {
 	}
 	
 	
-	public ResponseEntity<Object> getUserById(int id){
+	public Optional<Users> getUserById(int id){
 		Optional<Users> users = usersRepo.findById(id);
-		return ResponseEntity.status(HttpStatus.OK).body(new UsersResponse(users.get()));
+		return users;
 
 	}
 

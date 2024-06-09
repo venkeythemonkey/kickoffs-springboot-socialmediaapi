@@ -27,8 +27,8 @@ public class Controller {
 	@Autowired
 	UsersService usersService;
 
-	@Autowired
-	UsersRepo usersRepo;
+//	@Autowired
+//	UsersRepo usersRepo;
 
 	
 	@PostMapping("/signup")
@@ -40,7 +40,7 @@ public class Controller {
 	@GetMapping("/home")
 	public ResponseEntity<Object> allUser(@RequestParam(required = false) Optional<Integer> userId){
 		if(userId.isPresent()){
-			Optional<Users> user = usersRepo.findById(userId.get());
+			Optional<Users> user = usersService.getUserById(userId.get());
 			if (user.isPresent()){
 				return ResponseEntity.ok(new UsersResponse(user.get()));
 			}
@@ -49,10 +49,11 @@ public class Controller {
 			}
 		}
 		else {
-			List<Users> users = usersRepo.findAll();
-			List<UsersResponse> usersResponses = users.stream()
-					.map(UsersResponse::new)
-					.collect(Collectors.toList());
+//			List<Users> users = usersRepo.findAll();
+//			List<UsersResponse> usersResponses = users.stream()
+//					.map(UsersResponse::new)
+//					.collect(Collectors.toList());
+			List<UsersResponse> usersResponses = usersService.getAllUsers();
 			return ResponseEntity.ok(usersResponses);
 		}
 	}
